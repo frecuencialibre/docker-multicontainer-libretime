@@ -24,7 +24,7 @@ ENV LANGUAGE=en_US.UTF-8
 RUN apt-get install -y php7.0-curl php7.0-pgsql apache2 libapache2-mod-php7.0 php7.0 php-pear php7.0-gd php-bcmath php-mbstring
 
 # Pull down libretime sources
-ADD https://github.com/LibreTime/libretime/archive/master.tar.gz /opt
+ADD https://github.com/frecuencialibre/libretime/archive/latest-with-import.tar.gz /opt
 
 # Run libretime install script
 RUN export DEBIAN_FRONTEND=noninteractive && \
