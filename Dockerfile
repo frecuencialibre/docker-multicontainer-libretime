@@ -29,8 +29,8 @@ ADD https://github.com/frecuencialibre/libretime/archive/latest-with-import.tar.
 # Run libretime install script
 RUN export DEBIAN_FRONTEND=noninteractive && \
     cd /opt && \
-    tar -xzf /opt/master.tar.gz && \
-    mv /opt/libretime-master /opt/libretime && \
+    tar -xzf /opt/latest-with-import.tar.gz && \
+    mv /opt/libretime-latest-with-import /opt/libretime && \
     SYSTEM_INIT_METHOD=`readlink --canonicalize -n /proc/1/exe | rev | cut -d'/' -f 1 | rev` && \
     sed -i -e 's/\*systemd\*)/\*'"$SYSTEM_INIT_METHOD"'\*)/g' /opt/libretime/install && \
     echo "SYSTEM_INIT_METHOD: [$SYSTEM_INIT_METHOD]" && \
