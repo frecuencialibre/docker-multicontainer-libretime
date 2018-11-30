@@ -85,8 +85,8 @@ services:
 
     ports:
       # Master & Show Source Inputs:
-      - 8001:8001
-      - 8002:8002
+      - ${MASTER_SOURCE_PORT-8001}:8001
+      - ${DJ_SOURCE_PORT-8002}:8002
 
       # Port at which the LibreTime web interface should be served
       - ${WEB_UI_PORT-8882}:80
@@ -132,6 +132,20 @@ services:
     networks:
       - libretime-internal
       - libretime
+
+  ## UNCOMMENT IF YOU WANT TO SEND YOUR ICECAST LISTENER STATS UP TO GOOGLE ANALTYICS 
+  # icecast-analytics:
+
+  #   image: bushrangers/docker-icecast-google-analytics:latest
+
+  #   container_name: icecast-analytics
+  #   restart: always
+  #   privileged:  true
+  #   network_mode: host
+
+  ## PLEASE CONFIGURE THE "icecast-ga-config.xml" FILE BEFORE USING THIS CONTAINER
+  #   volumes:
+  # - ./config/icecast-ga-config.xml:/config/config.xml
 
 networks:
   libretime-internal:

@@ -39,7 +39,7 @@ Optional Extras:
 
 You will want to create a new `.env` file in the root of the project directory with variables that will not be over-written when pulling down newer builds of the configuration.
 
-If you are just testing locally and not deploying this in a production environment, you can skip over this section and use the default configuration.
+If you are just testing locally and not deploying this in a production environment, you can skip over this section and use the default configuration, however **if you are planning on deploying this on the Internet as a live server you SHOULD SET this configuration so you are not using default passwords/configuration etc.**
 
 ### Variables Currently Supported:
 
@@ -52,6 +52,9 @@ If you are just testing locally and not deploying this in a production environme
 | `ICECAST_CONFIG_FILE`   | libretime-icecast  | ./config/icecast-example.xml | Path to your Icecast configuration file                               |
 | `EXTERNAL_HOSTNAME`     | libretime-core     | localhost                    | The FQDN of your server published on the internet - If left as `localhost` apache iframes and other configuration will be stripped out and made "relative"                     |
 | `LOCAL_MUSIC_MAPPING`   | libretime-core     | `./localmusic`               | The path to your media directory / where uploads/media will be stored |
+| `WEB_UI_PORT`           | libretime-core     | 8882                         | The default port that the main Libretime HTTP Server/Web-UI will run on |
+| `MASTER_SOURCE_PORT`    | libretime-core     | 8001                         | Master port that producers can use to over-ride the active program with an Icecast Stream (Use a tool like [BUTT](https://github.com/dkwiebe/broadcasttool)) |
+| `DJ_SOURCE_PORT`        | libretime-core     | 8002                         | DJ's Icecast port that they can use remotely (using their Libretime credentials) to broadcast during their scheduled time-slot |
 
 You must change the passwords in your `ICECAST_CONFIG_FILE` at a minimum - **(Don't leave the passwords as the default if you're exposing this to the internet, you will be hacked _(The default is ok if you're testing)_ - You will also need to update your settings in the Libratime UI)**.
 
@@ -63,12 +66,18 @@ It's pretty straightforward, just clone down the sources and stand up the contai
 # Clone down sources
 git clone https://github.com/ned-kelly/docker-multicontainer-libretime.git
 
-### MAKE YOUR CONFIGURATION CHANGES IF REQUIRED ###
+### CREATE AN .env FILE AND ADD CONFIGURATION (See variables above for details) ###
 vi docker-multicontainer-libretime/.env
 
 # Edit your Icecast File
 cp docker-multicontainer-libretime/config/icecast-example.xml docker-multicontainer-libretime/config/icecast.xml
 vi docker-multicontainer-libretime/config/icecast.xml
+
+# Create a new docker network if this is the first time running Libretime it will be required...
+docker network create libretime
+
+# You will need to make your 'localmusic' directory writable so you can upload some content to the server...
+mkdir localmusic && chmod 777 localmusic
 
 # Stand up the container
 docker-compose up -d
@@ -77,7 +86,7 @@ docker-compose up -d
 
 **Building against the Master Branch**:
 
-If you want to build against the most recent Libratime release on Github (rather than using the official releases), simply edit the main `docker-compose.yml` file and comment out the `image` directive (in the `libretime-core` definition) and uncomment the `build` line. This will not pull the latest build from the Docker hub, but rather build a local copy from the latest Libratime sources locally. Note that there's no guarantees against the stability of Libratime when using "bleeding edge" builds.
+If you want to build against the most recent Libratime releases (rather than using the pre-built docker image), simply edit the main `docker-compose.yml` file and comment out the `image` directive (in the `libretime-core` definition) and uncomment the `build` line. This will not pull the latest build from the Docker hub, but rather build a local copy from the latest Libratime sources locally. Note that there's no guarantees against the stability of Libratime when using "bleeding edge" builds and you should test this before rolling out into production.
 
 **NOTE**:
 
@@ -120,9 +129,9 @@ You will need to setup port forwarding to your Docker host for:
 
  - TCP:8000 (Icecast server) - **NB: change the default icecast passwords first!**
  - Perhaps to your web interface port if you want this public...
- - TCP:8001 & TCP:8002 (Remote access for Master & Source inputs - **NB: This allows open access to Libretime, use with caution or via a VPN.**
+ - TCP:8001 & TCP:8002 (Remote access for Master & Source inputs - **NB: This allows open access to Libretime, use with caution or via a VPN - or make sure you have secure passwords for your DJ's!**
 
-You might want to use something like [This "Caddy" Docker Container](https://github.com/abiosoft/caddy-docker) to proxy pass to Apache with an automatic signed SSL certificate thanks to Lets Encrypt... 
+You might want to use something like [This "Caddy" Docker Container](https://github.com/ned-kelly/alpine-caddy) to proxy pass to Apache with an automatic signed SSL certificate thanks to Lets Encrypt... 
 
 ## Icecast Google Analytics
 
