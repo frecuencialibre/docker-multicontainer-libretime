@@ -41,12 +41,12 @@ services:
     ## Docker-compose can create the containers in two ways: 
     ## 1. From a local Dockerfile by supplying a path to the "build" configuration option. This method is commented-out by default:
     
-    # build:
-    #   context: ./libretime-core
-    #   dockerfile: Dockerfile
+    build:
+      context: ./libretime-core
+      dockerfile: Dockerfile
     
     ## 2. From a pre-made image downloaded from docker-hub. This option is enabled by default because it's faster. 
-    image: bushrangers/ubuntu-multicontainer-libretime:libretime-latest
+    # image: bushrangers/ubuntu-multicontainer-libretime:libretime-latest
     
     # To make changes to how the libretime-core container is built, modify the Dockerfile contained in this same folder, uncomment the "build: ." line above, and comment-out the "image: ..." line. You will then need to run docker-compose again, this time supplying options to tell it not to use it's cache: `docker-compose up -d --build --force-recreate`
     # See the docker-compose documentation for more information: https://docs.docker.com/compose/overview/
@@ -101,7 +101,7 @@ services:
       # NB: Libretime will create some directories in this location (for user uploads, recorded podcasts etc)
       # Change the `/localmusic` part of this directive to the location of your media files..
       - ${LOCAL_MUSIC_MAPPING-./localmusic}:/external-media
-
+      - ${LOCAL_LIBRETIME_SRC-/var/www/html/libretime}:/usr/share/airtime/php
     networks:
       - libretime-internal
       - libretime
