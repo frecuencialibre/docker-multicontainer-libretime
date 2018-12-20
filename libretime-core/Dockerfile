@@ -52,7 +52,8 @@ RUN apt-get install -y \
 
 # Pull down libretime sources
 RUN export DEBIAN_FRONTEND=noninteractive && \
-    git clone --depth=1 https://github.com/ned-kelly/libretime.git /opt/libretime && \
+    git clone https://github.com/frecuencialibre/libretime.git /opt/libretime && \
+    cd /opt/libretime && git master && git log -3 && \
     SYSTEM_INIT_METHOD=`readlink --canonicalize -n /proc/1/exe | rev | cut -d'/' -f 1 | rev` && \
     sed -i -e 's/\*systemd\*)/\*'"$SYSTEM_INIT_METHOD"'\*)/g' /opt/libretime/install && \
     echo "SYSTEM_INIT_METHOD: [$SYSTEM_INIT_METHOD]" && \
