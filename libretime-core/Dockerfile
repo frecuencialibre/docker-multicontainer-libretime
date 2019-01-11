@@ -50,9 +50,9 @@ RUN apt-get install -y \
         php-bcmath \
         php-mbstring
 
-# Pull down libretime sources
+# Pull down libretime sources and run the install script
 RUN export DEBIAN_FRONTEND=noninteractive && \
-    git clone --depth=1 https://github.com/ned-kelly/libretime.git /opt/libretime && \
+    git clone --depth=1 https://github.com/LibreTime/libretime.git /opt/libretime && \
     SYSTEM_INIT_METHOD=`readlink --canonicalize -n /proc/1/exe | rev | cut -d'/' -f 1 | rev` && \
     sed -i -e 's/\*systemd\*)/\*'"$SYSTEM_INIT_METHOD"'\*)/g' /opt/libretime/install && \
     echo "SYSTEM_INIT_METHOD: [$SYSTEM_INIT_METHOD]" && \

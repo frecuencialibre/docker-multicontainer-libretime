@@ -37,7 +37,6 @@ services:
       - libretime-internal
 
   libretime-core:
-
     ## Docker-compose can create the containers in two ways: 
     ## 1. From a local Dockerfile by supplying a path to the "build" configuration option. This method is commented-out by default:
     
